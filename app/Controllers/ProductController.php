@@ -2,8 +2,10 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ProductModel;
+use codeigniter\API\ResponseTrait;
 
 class ProductController extends BaseController {
+    use ResponseTrait;
 
     public function __construct(){
         $this->product = new ProductModel();
@@ -35,9 +37,21 @@ class ProductController extends BaseController {
         $data = [
             'data' => $products
         ];
-
+        
         return view('product', $data);
     }
+
+    public function readProductsApi(){
+        $products = $this->product->findAll();
+
+        return $this->respond(
+            [
+                'code' => 200,
+                'status' => 'success',
+                'data' => $products
+            ]
+            );
+        }
 
     public function getProduct($id) {
         $product = $this->product->where('id', $id)->first();
